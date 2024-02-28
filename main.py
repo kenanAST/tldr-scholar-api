@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from crewai import Agent, Task, Crew, Process
+import os
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from textwrap import dedent
 from tools.read_pdf import ScraperTool
+import requests
 import json
 
 app = FastAPI()
@@ -13,6 +15,9 @@ class ScrapeRequest(BaseModel):
     url: str
 
 class ScrapeResponse(BaseModel):
+    result: dict
+
+class SearchResponse(BaseModel):
     result: dict
 
 load_dotenv()
@@ -76,6 +81,20 @@ async def scrape_website(request: ScrapeRequest):
     raw_data = run_crew(doi)
     result = json.loads(raw_data)
     return {"result": result}
+
+@app.get("/search", response_model=SearchResponse)
+async def search(q: str):
+    url = "https://google.serper.dev/scholar"
+    payload = json.dumps({
+        "q": q
+    })
+    headers = {
+        'X-API-KEY': os.getenv("SERPER_API_KEY"),
+        'Content-Type': 'application/json'
+    }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    print("RESPONSE", response.text)
+    return {"result": json.loads(response.text)}
 
 if __name__ == "__main__":
     import uvicorn
