@@ -3,23 +3,18 @@ from pydantic import BaseModel
 from crewai import Crew, Process
 import os
 from textwrap import dedent
-from agents import scientist_researcher, fun_educator
-from tasks import gather_concepts, create_engaging_education
+from agents import initialize_agents
+from tasks import initialize_tasks
 import requests
 import json
 
 app = FastAPI()
 
-class ScrapeRequest(BaseModel):
-    url: str
 
-class ScrapeResponse(BaseModel):
-    result: dict
+def run_crew(article_title: str):
 
-class SearchResponse(BaseModel):
-    result: dict
-
-def run_crew(doi):
+    gather_concepts, create_engaging_education = initialize_tasks(article_title)
+    scientist_researcher, fun_educator = initialize_agents(article_title)
 
     crew = Crew(
         agents=[scientist_researcher, fun_educator],
@@ -32,16 +27,15 @@ def run_crew(doi):
     return result
 
 
-@app.post("/learn/", response_model=ScrapeResponse)
-async def scrape_website(request: ScrapeRequest):
-    global url
-    doi = dedent(request.doi)
-    print("DOI", doi)
-    raw_data = run_crew(doi)
+@app.post("/summarize", response_model=dict)
+async def summarize_article(article_title: str):
+    print("Article Title", article_title)
+    raw_data = run_crew(article_title)
+    print("RawzData", raw_data)
     result = json.loads(raw_data)
     return {"result": result}
 
-@app.get("/search", response_model=SearchResponse)
+@app.get("/search", response_model=dict)
 async def search(q: str):
     url = "https://google.serper.dev/scholar"
     payload = json.dumps({
