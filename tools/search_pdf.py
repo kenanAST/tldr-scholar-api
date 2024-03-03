@@ -51,11 +51,8 @@ class FetchPDFTool():
     article_title = convert_apostrophes(article_title)
     doi = cr.works(query=article_title)['message']['items'][0]['DOI']
 
-    print("Reached DOI", doi)
 
     url = fetch_pdf_link(f"https://sci-hub.wf/{doi}")
-
-    print("URLZSK", url)
 
     response = requests.get(url)
     
@@ -76,7 +73,6 @@ class FetchPDFTool():
             reader.stream.close()
 
             os.remove('temp.pdf')
-            print("Outputzsk", output)
             return output
         else:
             print("Content received is not a PDF.")

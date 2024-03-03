@@ -30,9 +30,7 @@ def run_crew(article_title: str):
 
 @app.post("/summarize", response_model=dict)
 async def summarize_article(article_title: str):
-    print("Article Title", article_title)
     raw_data = run_crew(article_title)
-    print("RawzData", raw_data)
     result = json.loads(raw_data)
     return {"result": result}
 
@@ -47,7 +45,6 @@ async def search(q: str):
         'Content-Type': 'application/json'
     }
     response = requests.request("POST", url, headers=headers, data=payload)
-    print("RESPONSE", response.text)
     return {"result": json.loads(response.text)}
 
 if __name__ == "__main__":
