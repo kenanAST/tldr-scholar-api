@@ -25,7 +25,7 @@ def initialize_tasks(article_title: str):
 
 
     write_engaging_summary = Task(
-        description=f"""Organize the important information of a research article into a fun and engaging way of understanding the concepts. Give me a JSON of this.""",
+        description=f"""Organize the important information of a research article into a fun and engaging way of understanding the concepts. Give me a JSON of this. The JSON key is summary and the value is the a multiline summary of the article.""",
         agent=writer
     )
 
