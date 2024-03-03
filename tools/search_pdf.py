@@ -37,14 +37,13 @@ def fetch_pdf_link(scihub_url):
             style.decompose()  
         
         link = soup.find_all('iframe')[1]['src']
-        print('Soupzsk', link)
         return link
     else:
         return "Failed to retrieve the webpage"
 
 
 class FetchPDFTool():
-  @tool("Get the pdf contents of an article given the article title")
+  @tool("Gather the pdf contents of an article given an article title")
   def read_pdf(article_title: str):
     "Useful for getting the pdf contents from an article."
 
@@ -56,11 +55,11 @@ class FetchPDFTool():
 
     response = requests.get(url)
     
-    # Check if the response is successful (status code 200)
-    if response.status_code == 200:
-        # Check for content type to ensure PDF file is received
-        if response.headers['Content-Type'] == 'application/pdf':
-            # Write the PDF content to a file
+    max_attempts = 10 
+    wait_time = 3
+
+    for attempt in range(max_attempts):
+        if response.status_code == 200 and response.headers['Content-Type'] == 'application/pdf':
             with open('temp.pdf', 'wb') as f:
                 f.write(response.content)
 
@@ -75,8 +74,9 @@ class FetchPDFTool():
             os.remove('temp.pdf')
             return output
         else:
-            print("Content received is not a PDF.")
-            return None
-    else:
-        print("Failed to fetch PDF content.")
+            print(f"Attempt {attempt+1}/{max_attempts}: Content not ready. Waiting for {wait_time} seconds.")
+            time.sleep(wait_time)
+            response = requests.get(url)
+
+    print("Failed to fetch PDF content after multiple attempts.")
     return None
