@@ -8,7 +8,7 @@ def initialize_agents(article_title: str):
     scientist_researcher = Agent(
         role='Senior Scientist Researcher',
         goal='Gather the important information of a research article',
-        backstory="""You are a scientist with a wide experience in research. You have been tasked with gathering the important information of a research article. You have been given the DOI of the article.""",
+        backstory=f"""You are a scientist with a wide experience in research. You have been tasked with gathering the important information of a research article. Article title: {article_title}""",
         verbose=True,
         allow_delegation=False,
         tools=[read_pdf],

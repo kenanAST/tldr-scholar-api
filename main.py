@@ -2,14 +2,16 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from crewai import Crew, Process
 import os
-from textwrap import dedent
 from agents import initialize_agents
 from tasks import initialize_tasks
+from tools.search_pdf import FetchPDFTool
 import requests
 import json
 
 app = FastAPI()
 
+
+read_pdf = FetchPDFTool.read_pdf
 
 def run_crew(article_title: str):
 
@@ -25,7 +27,6 @@ def run_crew(article_title: str):
 
     result = crew.kickoff()
     return result
-
 
 @app.post("/summarize", response_model=dict)
 async def summarize_article(article_title: str):

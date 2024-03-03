@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from habanero import Crossref
 load_dotenv()
 
+import time
+
 
 cr = Crossref()
 
@@ -43,33 +45,42 @@ def fetch_pdf_link(scihub_url):
 
 class FetchPDFTool():
   @tool("Get the pdf contents of an article given the article title")
-
   def read_pdf(article_title: str):
     "Useful for getting the pdf contents from an article."
-
 
     article_title = convert_apostrophes(article_title)
     doi = cr.works(query=article_title)['message']['items'][0]['DOI']
 
     print("Reached DOI", doi)
 
-    url= fetch_pdf_link(f"https://sci-hub.wf/{doi}")
+    url = fetch_pdf_link(f"https://sci-hub.wf/{doi}")
 
     print("URLZSK", url)
 
-
     response = requests.get(url)
-    with open('temp.pdf', 'wb') as f:
-        f.write(response.content)
+    
+    # Check if the response is successful (status code 200)
+    if response.status_code == 200:
+        # Check for content type to ensure PDF file is received
+        if response.headers['Content-Type'] == 'application/pdf':
+            # Write the PDF content to a file
+            with open('temp.pdf', 'wb') as f:
+                f.write(response.content)
 
-    reader = PdfReader('temp.pdf')
-    output = ""
+            reader = PdfReader('temp.pdf')
+            output = ""
 
-    for page in reader.pages:
-        output += page.extract_text()
+            for page in reader.pages:
+                output += page.extract_text()
 
-    reader.stream.close()
+            reader.stream.close()
 
-    os.remove('temp.pdf')
-    print("Outputzsk", output)
-    return output
+            os.remove('temp.pdf')
+            print("Outputzsk", output)
+            return output
+        else:
+            print("Content received is not a PDF.")
+            return None
+    else:
+        print("Failed to fetch PDF content.")
+    return None
