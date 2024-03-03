@@ -28,9 +28,10 @@ def run_crew(article_title: str):
     result = crew.kickoff()
     return result
 
-@app.post("/summarize", response_model=dict)
+@app.get("/summarize", response_model=dict)
 async def summarize_article(article_title: str):
     raw_data = run_crew(article_title)
+    print("Type: ",type(raw_data))
     result = json.loads(raw_data)
     return {"result": result}
 
