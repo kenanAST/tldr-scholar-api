@@ -15,8 +15,8 @@ def initialize_agents(article_title: str):
         llm=OpenAIGPT3LLM
     )
 
-    fun_educator = Agent(
-        role='Fun Educator',
+    writer = Agent(
+        role='Research Paper Writer',
         goal='You will organize the important information of a research article into a fun and engaging way of understanding the concepts.',
         backstory="""You are an entertaining educator that can take complex information and make it fun and engaging for the general audience. You have been tasked with organizing the important information of a research article into a fun and engaging way of understanding the concepts.""",
         verbose=True,
@@ -24,6 +24,6 @@ def initialize_agents(article_title: str):
         llm=OpenAIGPT3LLM
     )
 
-    return scientist_researcher, fun_educator
+    return scientist_researcher, writer
 
 

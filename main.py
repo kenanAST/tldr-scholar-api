@@ -15,12 +15,12 @@ read_pdf = FetchPDFTool.read_pdf
 
 def run_crew(article_title: str):
 
-    gather_concepts, create_engaging_education = initialize_tasks(article_title)
-    scientist_researcher, fun_educator = initialize_agents(article_title)
+    gather_concepts, write_engaging_summary = initialize_tasks(article_title)
+    scientist_researcher, writer = initialize_agents(article_title)
 
     crew = Crew(
-        agents=[scientist_researcher, fun_educator],
-        tasks=[gather_concepts, create_engaging_education],
+        agents=[scientist_researcher, writer],
+        tasks=[gather_concepts, write_engaging_summary],
         verbose=2, # You can set it to 1 or 2 to different logging levels
         process=Process.sequential
     )

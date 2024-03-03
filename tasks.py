@@ -4,10 +4,10 @@ from crewai import Task
 
 def initialize_tasks(article_title: str):
 
-    scientist_researcher, fun_educator = initialize_agents(article_title)
+    scientist_researcher, writer = initialize_agents(article_title)
 
     gather_concepts = Task(
-        description=f"""Gather the important information of a research article. Article Title: {article_title}""",
+        description=f"""Gather important information of a research article. Article Title: {article_title}""",
         expected_output=
         """
         1. Title: The title of the research article should be concise yet descriptive.
@@ -24,9 +24,9 @@ def initialize_tasks(article_title: str):
     )
 
 
-    create_engaging_education = Task(
-        description=f"""Organize the important information of a research article into a fun and engaging way of understanding the concepts. Article Title: {article_title}""",
-        agent=fun_educator
+    write_engaging_summary = Task(
+        description=f"""Organize the important information of a research article into a fun and engaging way of understanding the concepts. Give me a JSON of this.""",
+        agent=writer
     )
 
-    return gather_concepts, create_engaging_education
+    return gather_concepts, write_engaging_summary
