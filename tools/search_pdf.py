@@ -49,14 +49,16 @@ class FetchPDFTool():
 
     article_title = convert_apostrophes(article_title)
     doi = cr.works(query=article_title)['message']['items'][0]['DOI']
-
+    print("Fetching DOI for the article", doi)
 
     url = fetch_pdf_link(f"https://sci-hub.wf/{doi}")
+    print("Fetching PDF link", url)
 
     response = requests.get(url)
+    print("Fetching PDF content", url)
     
     max_attempts = 10 
-    wait_time = 3
+    wait_time = 5
 
     for attempt in range(max_attempts):
         if response.status_code == 200 and response.headers['Content-Type'] == 'application/pdf':
