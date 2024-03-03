@@ -32,8 +32,9 @@ def run_crew(article_title: str):
 async def summarize_article(article_title: str):
     raw_data = run_crew(article_title)
     print("Type: ",type(raw_data))
-    result = json.loads(raw_data)
-    return {"result": result}
+    print("Data:", raw_data)
+    result = json.loads(raw_data.strip())
+    return result
 
 @app.get("/search", response_model=dict)
 async def search(q: str):
