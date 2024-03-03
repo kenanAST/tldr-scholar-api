@@ -7,8 +7,20 @@ from tasks import initialize_tasks
 from tools.search_pdf import FetchPDFTool
 import requests
 import json
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
+
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # You might want to restrict this to your frontend URL in production
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
 
 
 read_pdf = FetchPDFTool.read_pdf
@@ -30,11 +42,13 @@ def run_crew(article_title: str):
 
 @app.get("/summarize", response_model=dict)
 async def summarize_article(article_title: str):
-    raw_data = run_crew(article_title)
-    print("Type: ",type(raw_data))
-    print("Data:", raw_data)
-    result = json.loads(raw_data.strip())
-    return result
+    result = run_crew(article_title)
+    result = result.replace("Final Answer:", "")
+    result = result.replace("```","")
+    print("Type: ", type(result))
+    print("Datazsk:", result)
+    dict_result = json.loads(result)
+    return dict_result
 
 @app.get("/search", response_model=dict)
 async def search(q: str):
