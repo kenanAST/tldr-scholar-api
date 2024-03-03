@@ -11,3 +11,5 @@ OpenAIGPT4LLM = ChatOpenAI(
     model="gpt-4",
 )
 
+llm=OpenAIGPT3LLM
+
