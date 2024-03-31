@@ -16,5 +16,9 @@ DolphinMistal = Ollama(
     model='dolphin-mistral',
 )
 
-llm=DolphinMistal
+Mistal = Ollama(
+    model='mistral',
+)
+
+llm=Mistal
 
