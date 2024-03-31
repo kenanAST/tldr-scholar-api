@@ -1,4 +1,5 @@
 from langchain_openai import ChatOpenAI
+from langchain_community.llms import Ollama
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,5 +12,9 @@ OpenAIGPT4LLM = ChatOpenAI(
     model="gpt-4",
 )
 
-llm=OpenAIGPT3LLM
+DolphinMistal = Ollama(
+    model='dolphin-mistral',
+)
+
+llm=DolphinMistal
 
